@@ -167,7 +167,9 @@ Serial::SerialImpl::reconfigurePort ()
   struct termios options; // The options for the file descriptor
 
   if (tcgetattr(fd_, &options) == -1) {
-    THROW (IOException, "::tcgetattr");
+    std::stringstream ss;
+    ss << "::tcgetattr failed: " << errno << " " << strerror(errno);
+    THROW (IOException, ss.str().c_str());
   }
 
   // set up raw mode / no echo / binary
